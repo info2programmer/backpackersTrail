@@ -26,10 +26,10 @@ export default function home() {
 
   }, [])
   return (
-    <Page name="home" className="backGroundPage">
+    <Page name="home" className="backGroundPage" >
       {/* Top Navbar */}
-      <Navbar sliding={false}>
-        <NavTitle sliding className="nav-title">Backpackers Trails</NavTitle>
+      <Navbar sliding={false} noShadow={true}>
+        <NavTitle sliding className="nav-title homeTitle">Backpackers Trails</NavTitle>
       </Navbar>
 
       {/* Page content */}

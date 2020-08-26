@@ -94,3 +94,7 @@
     background : url('../assets/treking-trail.jpg');
     background-size: cover;
 }
+.homeTitle{
+    font-size: 25px !important;
+    color: #007aff !important;
+}
