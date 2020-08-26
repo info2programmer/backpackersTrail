@@ -98,3 +98,7 @@
     font-size: 25px !important;
     color: #007aff !important;
 }
+.roadTrail{
+    background : url('../assets/road-trail.jpg');
+    background-size: cover;
+}
