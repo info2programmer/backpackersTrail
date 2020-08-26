@@ -1,5 +1,5 @@
 import React from 'react';
-
+var opened = 0;
 import {
   App,
   Panel,
@@ -69,6 +69,9 @@ export default class extends React.Component {
 
         // App routes
         routes: routes,
+        view : {
+          pushState: false
+        },
         // Register service worker
         serviceWorker: {
           path: '/service-worker.js',
@@ -150,7 +153,43 @@ export default class extends React.Component {
       this.$f7.loginScreen.close();
     });
   }
+
+
+  exitApp(){
+    if (opened > 0) {
+      return false;
+    } else {
+      this.$f7.dialog.confirm('Are you sure you want to exit?', 'Exit App', 
+        function () {
+        navigator.this.$f7.exitApp();
+        },
+        function () {
+        opened = 0;  
+        return false;
+        }
+      );
+      opened = 1;
+    }
+  }
+  
+      
+  
+  // This Function For setup back button
+  backButtonEventListener(){
+    document.addEventListener("backbutton", ()=>{
+      if(this.$f7.views.main.history.length == 1){
+        exitApp();
+        e.preventDefault();
+      } else {
+        this.$f7.dialog.close();
+        this.$f7.views.main.router.back();
+        return false;
+      }
+    }, false);
+  }
+
   componentDidMount() {
+    this.backButtonEventListener()
     this.$f7ready((f7) => {
       if(localStorage.getItem('authUser') !== "" || localStorage.getItem('authUser') !== undefined){
         // alert("here")
