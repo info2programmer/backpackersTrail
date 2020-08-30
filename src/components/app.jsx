@@ -157,15 +157,15 @@ export default class extends React.Component {
   }
 
   responseGoogleSuccess(response){
-    console.log(response.profileObj)
+    this.$f7ready((f7) => {
     var data = response.profileObj
     axios.post("http://localhost/izifiso_new/api/trailApi/authResult",JSON.stringify(data))
     .then(function(res){
-      console.log(res.data.token)
-      // localStorage.setItem("auth",res.data.token)
-      // this.$f7.loginScreen.close()
+      localStorage.setItem("authBackpackersTrail",res.data.token)
+      f7.loginScreen.close("#my-login-screen")
     })
-    
+
+    }) 
   }
   
   responseGoogleFailure(response){
@@ -186,7 +186,7 @@ export default class extends React.Component {
   componentDidMount() {
     this.$f7ready((f7) => {
       
-      if (localStorage.getItem('auth') === "" || localStorage.getItem('auth') === undefined || localStorage.getItem('auth') === null) {
+      if (localStorage.getItem('authBackpackersTrail') === "" || localStorage.getItem('authBackpackersTrail') === undefined || localStorage.getItem('auth') === null) {
         f7.loginScreen.open("#my-login-screen")
       }
       else{
