@@ -102,3 +102,18 @@
     background : url('../assets/road-trail.jpg');
     background-size: cover;
 }
+.centErlement{
+    text-align: center;
+    top: 35%;
+}
+.preloaderContainer{
+    background-color: #fff;
+    width: 3em;
+    padding: 12px;
+    border-radius: 15%;
+    box-shadow: 10px 10px 5px #aaaaaa;
+    position: absolute;
+    transform: translate3d(50%,0,0);
+    bottom: 49%;
+    right: 50%;
+}

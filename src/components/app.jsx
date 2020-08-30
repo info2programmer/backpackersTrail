@@ -1,8 +1,6 @@
 import React from 'react';
-var opened = 0;
 import {
   App,
-  Panel,
   Views,
   View,
   Popup,
@@ -14,10 +12,6 @@ import {
   Block,
   LoginScreen,
   LoginScreenTitle,
-  List,
-  ListInput,
-  ListButton,
-  BlockFooter,
   BlockHeader,
   Button,
   Icon
@@ -25,14 +19,16 @@ import {
 import { GoogleLogin } from 'react-google-login';
 
 import routes from '../js/routes';
-import  "../css/app.css"
+import "../css/app.css"
 import SwiperSlider from './SwiperSlider';
+import { ToastContainer, toast } from 'react-toastify';
 
-const responseGoogle = (response) => {
-  console.log(response);
-}
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+
 
 export default class extends React.Component {
+  
   constructor() {
     super();
 
@@ -69,23 +65,26 @@ export default class extends React.Component {
 
         // App routes
         routes: routes,
-        view : {
+        view: {
           pushState: false
         },
         // Register service worker
         serviceWorker: {
           path: '/service-worker.js',
         },
+        
       },
       // Login screen demo data
       username: '',
       password: '',
     }
+
+    
   }
 
   render() {
     return (
-      <App params={ this.state.f7params } >
+      <App params={this.state.f7params} >
 
         {/* Views/Tabs container */}
         <Views tabs className="safe-areas">
@@ -130,21 +129,24 @@ export default class extends React.Component {
               <LoginScreenTitle className="loginHeading">Find a that's perfect for you</LoginScreenTitle>
               <BlockHeader>Explore collection of trail maps anywhere. Find your perfect treak, bike, cycle trails</BlockHeader>
               <Block>
-              <GoogleLogin
-                clientId="309867453124-beelpbk7vj8e41krloled5snvho3i7c3.apps.googleusercontent.com"
-                render={renderProps => (
-                  <Button raised outline  onClick={renderProps.onClick} disabled={renderProps.disabled}> <Icon ios="f7:logo_google" aurora="f7:logo_google" md="f7:logo_google"></Icon> Continue With Google</Button>
-                  // <button >This is my custom Google button</button>
-                )}
-                onSuccess={() => {responseGoogle}}
-                onFailure={() => {responseGoogle}}
-                cookiePolicy={'single_host_origin'}
-              />
-              <Link  popupClose="#my-login-screen">continue</Link>
+                <GoogleLogin
+                  clientId="309867453124-beelpbk7vj8e41krloled5snvho3i7c3.apps.googleusercontent.com"
+                  render={renderProps => (
+                    <Button raised outline onClick={renderProps.onClick} disabled={renderProps.disabled}> <Icon ios="f7:logo_google" aurora="f7:logo_google" md="f7:logo_google"></Icon> Continue With Google</Button>
+                    // <button >This is my custom Google button</button>
+                  )}
+                  onSuccess={(response)=>{this.responseGoogleSuccess(response)}}
+                  onFailure={(response)=>{this.responseGoogleFailure(response)}}
+                  cookiePolicy={'single_host_origin'}
+                />
+                {/* <Link  popupClose="#my-login-screen">continue</Link> */}
               </Block>
             </Page>
           </View>
+          <ToastContainer draggable={true} autoClose={5000}/>
         </LoginScreen>
+
+        
       </App>
     )
   }
@@ -154,50 +156,43 @@ export default class extends React.Component {
     });
   }
 
+  responseGoogleSuccess(response){
+    console.log(response.profileObj)
+    var data = response.profileObj
+    axios.post("http://localhost/izifiso_new/api/trailApi/authResult",JSON.stringify(data))
+    .then(function(res){
+      console.log(res.data.token)
+      // localStorage.setItem("auth",res.data.token)
+      // this.$f7.loginScreen.close()
+    })
+    
+  }
+  
+  responseGoogleFailure(response){
+    toast.error("Opps! Please try again", {
+      position: toast.POSITION.BOTTOM_CENTER
+    });
+  }
 
-  exitApp(){
-    if (opened > 0) {
-      return false;
-    } else {
-      this.$f7.dialog.confirm('Are you sure you want to exit?', 'Exit App', 
-        function () {
-        navigator.this.$f7.exitApp();
-        },
-        function () {
-        opened = 0;  
-        return false;
-        }
-      );
-      opened = 1;
-    }
-  }
-  
-      
-  
+
+ 
+
+
   // This Function For setup back button
-  backButtonEventListener(){
-    document.addEventListener("backbutton", ()=>{
-      if(this.$f7.views.main.history.length == 1){
-        exitApp();
-        e.preventDefault();
-      } else {
-        this.$f7.dialog.close();
-        this.$f7.views.main.router.back();
-        return false;
-      }
-    }, false);
-  }
+  
+
+  
 
   componentDidMount() {
-    this.backButtonEventListener()
     this.$f7ready((f7) => {
-      if(localStorage.getItem('authUser') !== "" || localStorage.getItem('authUser') !== undefined){
-        // alert("here")
+      
+      if (localStorage.getItem('auth') === "" || localStorage.getItem('auth') === undefined || localStorage.getItem('auth') === null) {
         f7.loginScreen.open("#my-login-screen")
-        // console.clear();
-        // console.log(f7)
+      }
+      else{
+
       }
     });
-    
+
   }
 }
