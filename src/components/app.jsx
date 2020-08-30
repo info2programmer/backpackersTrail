@@ -28,7 +28,7 @@ import axios from 'axios';
 
 
 export default class extends React.Component {
-  
+
   constructor() {
     super();
 
@@ -72,14 +72,14 @@ export default class extends React.Component {
         serviceWorker: {
           path: '/service-worker.js',
         },
-        
+
       },
       // Login screen demo data
       username: '',
       password: '',
     }
 
-    
+
   }
 
   render() {
@@ -135,18 +135,18 @@ export default class extends React.Component {
                     <Button raised outline onClick={renderProps.onClick} disabled={renderProps.disabled}> <Icon ios="f7:logo_google" aurora="f7:logo_google" md="f7:logo_google"></Icon> Continue With Google</Button>
                     // <button >This is my custom Google button</button>
                   )}
-                  onSuccess={(response)=>{this.responseGoogleSuccess(response)}}
-                  onFailure={(response)=>{this.responseGoogleFailure(response)}}
+                  onSuccess={(response) => { this.responseGoogleSuccess(response) }}
+                  onFailure={(response) => { this.responseGoogleFailure(response) }}
                   cookiePolicy={'single_host_origin'}
                 />
                 {/* <Link  popupClose="#my-login-screen">continue</Link> */}
               </Block>
             </Page>
           </View>
-          <ToastContainer draggable={true} autoClose={5000}/>
+          <ToastContainer draggable={true} autoClose={5000} />
         </LoginScreen>
 
-        
+
       </App>
     )
   }
@@ -156,41 +156,54 @@ export default class extends React.Component {
     });
   }
 
-  responseGoogleSuccess(response){
+  responseGoogleSuccess(response) {
     this.$f7ready((f7) => {
-    var data = response.profileObj
-    axios.post("http://localhost/izifiso_new/api/trailApi/authResult",JSON.stringify(data))
-    .then(function(res){
-      localStorage.setItem("authBackpackersTrail",res.data.token)
-      f7.loginScreen.close("#my-login-screen")
-    })
+      var data = response.profileObj
+      axios.post("http://localhost/izifiso_new/api/trailApi/authResult", JSON.stringify(data))
+        .then(function (res) {
+          localStorage.setItem("authBackpackersTrail", res.data.token)
+          f7.loginScreen.close("#my-login-screen")
+        })
 
-    }) 
+    })
   }
-  
-  responseGoogleFailure(response){
+
+  responseGoogleFailure(response) {
     toast.error("Opps! Please try again", {
       position: toast.POSITION.BOTTOM_CENTER
     });
   }
 
 
- 
+
 
 
   // This Function For setup back button
-  
 
-  
+
+
 
   componentDidMount() {
     this.$f7ready((f7) => {
       
-      if (localStorage.getItem('authBackpackersTrail') === "" || localStorage.getItem('authBackpackersTrail') === undefined || localStorage.getItem('auth') === null) {
+      if ( localStorage.getItem('authBackpackersTrail') === null) {
         f7.loginScreen.open("#my-login-screen")
       }
-      else{
-
+      else {
+        // Check login okay or not
+        let token = {
+          token : localStorage.getItem("authBackpackersTrail")
+        }
+        axios.post("http://localhost/izifiso_new/api/trailApi/verifyLogin", JSON.stringify(token))
+          .then(function (res) {
+            f7.loginScreen.close("#my-login-screen")
+          })
+          .catch(function(res){
+            f7.loginScreen.open("#my-login-screen")
+            toast.error("Opps! Please try again", {
+              position: toast.POSITION.BOTTOM_CENTER
+            });
+          })
       }
     });
 

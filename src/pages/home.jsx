@@ -15,15 +15,23 @@ import {
   CardHeader,
   List,
   ListItem,
-  Preloader
 } from 'framework7-react';
-import GoogleMap from "../components/GoogleMap"
+import CustomPreloader from '../components/CustomPreloader';
+import Axios from 'axios';
+import ReactHtmlParser from 'react-html-parser';
 
 
 export default function home() {
   const [loading, setLoading] = useState(true)
+  const [trailType, setTrailType] = useState([])
+  const [zoneList, setZoneList] = useState([])
   useEffect(() => {
-   
+    Axios.get("http://localhost/izifiso_new/api/trailApi/trailTypeAndZone")
+      .then(function (res) {
+        setLoading(!loading)
+        setTrailType(res.data.trailType)
+        setZoneList(res.data.zone)
+      })
   }, [])
   return (
     <Page name="home" className="backGroundPage" >
@@ -36,145 +44,37 @@ export default function home() {
       {/* <div>
       <GoogleMap />
     </div> */}
-      {loading ? (<Block className="centErlement"><div className="preloaderContainer"><Preloader color="multi"></Preloader></div></Block>) : (
+      {loading ? (<CustomPreloader />) : (
         <>
-          <Card expandable>
-            <CardContent padding={false}>
-              <div className="bg-color-yellow bikeTrail" style={{ height: '300px' }}>
-                <CardHeader textColor="black" className="display-block">
-                  Bike Trails
-            <br />
-                  <small style={{ opacity: 0.87 }}>This trails specially for bikers</small>
-                </CardHeader>
-                <Link cardClose color="black" className="card-opened-fade-in" style={{ position: 'absolute', right: '15px', top: '15px' }} iconF7="multiply_circle_fill" />
-              </div>
-              <div className="card-content-padding">
-                <Card className="bookineCard">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, doloremque mollitia! Dolorum, quod ad quas magni facilis, non veniam, distinctio iure alias fugit libero expedita beatae veritatis porro sunt accusamus.</Card>
-                <Card className="bookineCard">
-                  <List>
-                    <ListItem
-                      key={1}
-                      title="Purulia Zone"
-                      link={`/product/1`}
-                    />
-                    <ListItem
-                      key={2}
-                      title="Bankura Zone"
-                      link={`/product/2`}
-                    />
-                    <ListItem
-                      key={3}
-                      title="Boxa Zone"
-                      link={`/product/1`}
-                    />
-                    <ListItem
-                      key={4}
-                      title="Darjeeling Zone"
-                      link={`/product/2`}
-                    />
-                    <ListItem
-                      key={5}
-                      title="Dinajpur Zone"
-                      link={`/product/1`}
-                    />
-
-                  </List>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card expandable>
-            <CardContent padding={false}>
-              <div className="bg-color-yellow cycleTrail" style={{ height: '300px' }}>
-                <CardHeader textColor="black" className="display-block">
-                  Cycle Trails
-            <br />
-                  <small style={{ opacity: 0.87 }}>This trails specially for cycle lovers</small>
-                </CardHeader>
-                <Link cardClose color="black" className="card-opened-fade-in" style={{ position: 'absolute', right: '15px', top: '15px' }} iconF7="multiply_circle_fill" />
-              </div>
-              <div className="card-content-padding">
-                <Card className="bookineCard">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, doloremque mollitia! Dolorum, quod ad quas magni facilis, non veniam, distinctio iure alias fugit libero expedita beatae veritatis porro sunt accusamus.</Card>
-                <Card className="bookineCard">
-                  <List>
-                    <ListItem
-                      key={1}
-                      title="Purulia Zone"
-                      link={`/product/1`}
-                    />
-                    <ListItem
-                      key={2}
-                      title="Bankura Zone"
-                      link={`/product/2`}
-                    />
-                    <ListItem
-                      key={3}
-                      title="Boxa Zone"
-                      link={`/product/1`}
-                    />
-                    <ListItem
-                      key={4}
-                      title="Darjeeling Zone"
-                      link={`/product/2`}
-                    />
-                    <ListItem
-                      key={5}
-                      title="Dinajpur Zone"
-                      link={`/product/1`}
-                    />
-
-                  </List>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card expandable>
-            <CardContent padding={false}>
-              <div className="bg-color-yellow treakTrail" style={{ height: '300px' }}>
-                <CardHeader textColor="black" className="display-block">
-                  Cycle Trails
-            <br />
-                  <small style={{ opacity: 0.87 }}>Go on a long arduous journey, typically on you foot.</small>
-                </CardHeader>
-                <Link cardClose color="black" className="card-opened-fade-in" style={{ position: 'absolute', right: '15px', top: '15px' }} iconF7="multiply_circle_fill" />
-              </div>
-              <div className="card-content-padding">
-                <Card className="bookineCard">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, doloremque mollitia! Dolorum, quod ad quas magni facilis, non veniam, distinctio iure alias fugit libero expedita beatae veritatis porro sunt accusamus.</Card>
-                <Card className="bookineCard">
-                  <List>
-                    <ListItem
-                      key={1}
-                      title="Purulia Zone"
-                      link={`/product/1`}
-                    />
-                    <ListItem
-                      key={2}
-                      title="Bankura Zone"
-                      link={`/product/2`}
-                    />
-                    <ListItem
-                      key={3}
-                      title="Boxa Zone"
-                      link={`/product/1`}
-                    />
-                    <ListItem
-                      key={4}
-                      title="Darjeeling Zone"
-                      link={`/product/2`}
-                    />
-                    <ListItem
-                      key={5}
-                      title="Dinajpur Zone"
-                      link={`/product/1`}
-                    />
-
-                  </List>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
+          {trailType.length > 0 && trailType.map((i, j) => (
+            <Card expandable key={j}>
+              <CardContent padding={false}>
+                <div className="bg-color-yellow" style={{ height: '300px', backgroundImage :
+                `url(http://localhost/izifiso_new/assets/front/trail-image/${i.Image})`, backgroundSize: 'cover' }}>
+                  <CardHeader textColor="black" className="display-block">
+                    {i.name}
+                  <br />
+                    <small style={{ opacity: 0.87 }}>{i.oneLineDescription}</small>
+                  </CardHeader>
+                  <Link cardClose color="black" className="card-opened-fade-in" style={{ position: 'absolute', right: '15px', top: '15px' }} iconF7="multiply_circle_fill" />
+                </div>
+                <div className="card-content-padding">
+                  <Card className="bookineCard">{ReactHtmlParser(i.description)}</Card>
+                  <Card className="bookineCard">
+                    <List>
+                      {zoneList.length > 0 && zoneList.map((l,k)=>(
+                        <ListItem
+                          key={k}
+                          title={l.zoneName}
+                          link={`/zone/${l.id}/${i.id}`}
+                        />
+                        ))}  
+                    </List>
+                  </Card>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
 
         </>
       )}
