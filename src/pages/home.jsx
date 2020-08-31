@@ -66,7 +66,7 @@ export default function home() {
                         <ListItem
                           key={k}
                           title={l.zoneName}
-                          link={`/zone/${l.id}/${i.id}`}
+                          link={`/zone/${l.id}/${i.id}/`}
                         />
                         ))}  
                     </List>

@@ -11,7 +11,7 @@ import EditProfile from "../pages/EditProfile"
 import DynamicRoutePage from '../pages/dynamic-route.jsx';
 import RequestAndLoad from '../pages/request-and-load.jsx';
 import NotFoundPage from '../pages/404.jsx';
-import form from '../pages/form.jsx';
+import Zone from '../pages/Zone.jsx';
 
 var routes = [
   {
@@ -33,6 +33,10 @@ var routes = [
   {
     path: '/product/:id/',
     component: ProductPage,
+  },
+  {
+    path: '/zone/:zoneId/:typeId/',
+    component: Zone,
   },
   {
     path: '/settings/',
