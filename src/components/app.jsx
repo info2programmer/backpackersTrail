@@ -16,7 +16,7 @@ import {
   Button,
   Icon
 } from 'framework7-react';
-// import { GoogleLogin } from 'react-google-login';
+import { GoogleLogin } from 'react-google-login';
 
 import routes from '../js/routes';
 import "../css/app.css"
@@ -25,7 +25,6 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import * as firebase from 'firebase';
 
 
 export default class extends React.Component {
@@ -130,7 +129,16 @@ export default class extends React.Component {
               <LoginScreenTitle className="loginHeading">Find a that's perfect for you</LoginScreenTitle>
               <BlockHeader>Explore collection of trail maps anywhere. Find your perfect treak, bike, cycle trails</BlockHeader>
               <Block>
-                <Button outline onClick={()=>{this.openBrowser()}} > Continue With Google</Button>
+                <GoogleLogin
+                  clientId="309867453124-beelpbk7vj8e41krloled5snvho3i7c3.apps.googleusercontent.com"
+                  render={renderProps => (
+                    <Button raised outline onClick={renderProps.onClick} disabled={renderProps.disabled}> <Icon ios="f7:logo_google" aurora="f7:logo_google" md="f7:logo_google"></Icon> Continue With Google</Button>
+                    // <button >This is my custom Google button</button>
+                  )}
+                  onSuccess={(response) => { this.responseGoogleSuccess(response) }}
+                  onFailure={(response) => { this.responseGoogleFailure(response) }}
+                  cookiePolicy={'single_host_origin'}
+                />
                 {/* <Link  popupClose="#my-login-screen">continue</Link> */}
               </Block>
             </Page>
@@ -147,66 +155,6 @@ export default class extends React.Component {
       this.$f7.loginScreen.close();
     });
   }
-
-  // loginWithGoogle(){
-  //   const firebaseConfig = {
-  //     apiKey: "AIzaSyDP6pGAf-JhrlBFeg_bwZN81bVbLMmBwBw",
-  //     authDomain: "izifiso-web.firebaseapp.com",
-  //     databaseURL: "https://izifiso-web.firebaseio.com",
-  //     projectId: "izifiso-web",
-  //     storageBucket: "izifiso-web.appspot.com",
-  //     appId: "1:309867453124:android:d84fda21f74d92759a0791"
-  //   }
-  //   firebase.initializeApp(firebaseConfig)
-  //   // alert()
-  //   var provider = new firebase.auth.GoogleAuthProvider();
-  //   alert(JSON.stringify(provider))
-    
-  //   firebase.auth().signInWithRedirect(provider).then(function() {
-  //     return firebase.auth().getRedirectResult();
-  //   }).then(function(result) {
-  //     // This gives you a Google Access Token.
-  //     // You can use it to access the Google API.
-  //     var token = result.credential.accessToken;
-  //     // The signed-in user info.
-  //     var user = result.user;
-  //     alert(JSON.stringify(result))
-  //     // ...
-  //   }).catch(function(error) {
-  //     // Handle Errors here.
-  //     var errorCode = error.code;
-  //     var errorMessage = error.message;
-  //     alert(JSON.stringify(error))
-  //   });
-  // }
-
-  openBrowser() {
-    var url = 'https://cordova.apache.org';
-    var target = '_blank';
-    var options = "location = yes"
-    var ref = window.cordova.InAppBrowser.open(url, target, options);
-    
-    ref.addEventListener('loadstart', loadstartCallback);
-    ref.addEventListener('loadstop', loadstopCallback);
-    ref.addEventListener('loaderror', loaderrorCallback);
-    ref.addEventListener('exit', exitCallback);
- 
-    function loadstartCallback(event) {
-       console.log('Loading started: '  + event.url)
-    }
- 
-    function loadstopCallback(event) {
-       console.log('Loading finished: ' + event.url)
-    }
- 
-    function loaderrorCallback(error) {
-       console.log('Loading error: ' + error.message)
-    }
- 
-    function exitCallback() {
-       console.log('Browser is closed...')
-    }
- }
 
   responseGoogleSuccess(response) {
     this.$f7ready((f7) => {
