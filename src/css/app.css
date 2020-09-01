@@ -81,19 +81,7 @@
 .loginHeading {
     font-size: 1.4em;
 }
-.bikeTrail{
-    background : url('../assets/bike-trail.jpg');
-    background-size: cover;
-}
-.cycleTrail{
-    background : url('../assets/cycle-trail.jpg');
-    background-size: cover;
-}
 
-.treakTrail{
-    background : url('../assets/treking-trail.jpg');
-    background-size: cover;
-}
 .homeTitle{
     font-size: 25px !important;
     color: #007aff !important;
@@ -116,4 +104,9 @@
     transform: translate3d(50%,0,0);
     bottom: 49%;
     right: 50%;
+}
+
+.card-header{
+    height: 9em !important;
+    color: white !important;
 }
